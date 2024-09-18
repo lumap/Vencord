@@ -1,6 +1,3 @@
-[submodule "src/userplugins/src/userplugins/bigFileUpload"]
-	path = src/userplugins/src/userplugins/bigFileUpload
-	url = https://github.com/ScattrdBlade/bigFileUpload
 [submodule "src/userplugins/bigFileUpload"]
 	path = src/userplugins/bigFileUpload
 	url = https://github.com/ScattrdBlade/bigFileUpload
