@@ -241,7 +241,7 @@ export default function PluginSettings() {
         return o;
     }, []);
 
-    const sortedPlugins = useMemo(() => Object.values(Plugins)
+    let sortedPlugins = useMemo(() => Object.values(Plugins)
         .sort((a, b) => a.name.localeCompare(b.name)), []);
 
     const [searchValue, setSearchValue] = React.useState({ value: "", status: SearchStatus.ALL });
@@ -281,6 +281,16 @@ export default function PluginSettings() {
 
         return lodash.isEqual(newPlugins, sortedPluginNames) ? [] : newPlugins;
     }));
+
+    if (newPlugins != null) {
+        sortedPlugins = sortedPlugins.sort((a, b) => {
+            const aNew = newPlugins.includes(a.name);
+            const bNew = newPlugins.includes(b.name);
+            if (aNew && !bNew) return -1;
+            if (!aNew && bNew) return 1;
+            return 0;
+        });
+    }
 
     const plugins = [] as JSX.Element[];
     const requiredPlugins = [] as JSX.Element[];
