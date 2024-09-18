@@ -197,14 +197,15 @@ function BlockedUsersTab({ guild, setCount }: RelationshipProps) {
 }
 
 function UserList(type: "friends" | "blocked", guild: Guild, ids: string[], setCount: (count: number) => void) {
-    const missing = [] as string[];
-    const members = [] as string[];
+    const missing = [] as [string, User][];
+    const members = [] as [string, User][];
 
     for (const id of ids) {
+        const user = UserStore.getUser(id);
         if (GuildMemberStore.isMember(guild.id, id))
-            members.push(id);
+            members.push([id, user]);
         else
-            missing.push(id);
+            missing.push([id, user]);
     }
 
     // Used for side effects (rerender on member request success)
@@ -230,9 +231,9 @@ function UserList(type: "friends" | "blocked", guild: Guild, ids: string[], setC
 
     return (
         <ScrollerThin fade className={cl("scroller")}>
-            {members.map(id =>
+            {members.sort((a,b) => a[1].username.localeCompare(b[1].username)).map(([id, user]) =>
                 <FriendRow
-                    user={UserStore.getUser(id)}
+                    user={user}
                     status={PresenceStore.getStatus(id) || "offline"}
                     onSelect={() => openUserProfile(id)}
                     onContextMenu={() => { }}
