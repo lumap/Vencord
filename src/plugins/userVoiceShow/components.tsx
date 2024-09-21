@@ -8,7 +8,7 @@ import { classNameFactory } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { classes } from "@utils/misc";
 import { filters, findByCodeLazy, findByPropsLazy, findComponentByCodeLazy, findStoreLazy, mapMangledModuleLazy } from "@webpack";
-import { ChannelStore, GuildStore, IconUtils, match, NavigationRouter, P, PermissionsBits, PermissionStore, React, showToast, Text, Toasts, Tooltip, useMemo, UserStore, useStateFromStores } from "@webpack/common";
+import { ChannelRouter, ChannelStore, GuildStore, IconUtils, match, P, PermissionsBits, PermissionStore, React, showToast, Text, Toasts, Tooltip, useMemo, UserStore, useStateFromStores } from "@webpack/common";
 import { Channel } from "discord-types/general";
 
 const cl = classNameFactory("vc-uvs-");
@@ -23,6 +23,8 @@ const VoiceStateStore = findStoreLazy("VoiceStateStore");
 const UserSummaryItem = findComponentByCodeLazy("defaultRenderUser", "showDefaultAvatarsForNullUsers");
 const Avatar = findComponentByCodeLazy(".AVATAR_STATUS_TYPING_16;");
 const GroupDMAvatars = findComponentByCodeLazy(".AvatarSizeSpecs[", "getAvatarURL");
+
+const ActionButtonClasses = findByPropsLazy("actionButton", "highlight");
 
 interface IconProps extends React.ComponentPropsWithoutRef<"div"> {
     size?: number;
@@ -167,7 +169,7 @@ export const VoiceChannelIndicator = ErrorBoundary.wrap(({ userId, isActionButto
             selectVoiceChannel(channelId);
         } else {
             clickTimers[channelId] = setTimeout(() => {
-                NavigationRouter.transitionTo(`/channels/${channel.getGuildId() ?? "@me"}/${channelId}`);
+                ChannelRouter.transitionToChannel(channelId);
                 delete clickTimers[channelId];
             }, 250);
         }
@@ -182,7 +184,7 @@ export const VoiceChannelIndicator = ErrorBoundary.wrap(({ userId, isActionButto
             {props => {
                 const iconProps: IconProps = {
                     ...props,
-                    className: classes(isActionButton ? cl("indicator-action-button") : cl("speaker-padding"), isMessageIndicator && cl("message-indicator"), shouldHighlight && cl("highlight")),
+                    className: classes(isActionButton ? ActionButtonClasses.actionButton : cl("speaker-padding"), isMessageIndicator && cl("message-indicator"), shouldHighlight && ActionButtonClasses.highlight),
                     size: isActionButton ? 20 : undefined,
                     onClick
                 };
