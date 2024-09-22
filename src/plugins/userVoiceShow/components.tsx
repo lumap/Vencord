@@ -130,14 +130,13 @@ function VoiceChannelTooltip({ channel, isLocked }: VoiceChannelTooltipProps) {
 
 interface VoiceChannelIndicatorProps {
     userId: string;
+    size?: number;
     isActionButton?: boolean;
-    isMessageIndicator?: boolean;
-    shouldHighlight?: boolean;
 }
 
 const clickTimers = {} as Record<string, any>;
 
-export const VoiceChannelIndicator = ErrorBoundary.wrap(({ userId, isActionButton, isMessageIndicator, shouldHighlight }: VoiceChannelIndicatorProps) => {
+export const VoiceChannelIndicator = ErrorBoundary.wrap(({ userId, size, isActionButton }: VoiceChannelIndicatorProps) => {
     const channelId = useStateFromStores([VoiceStateStore], () => VoiceStateStore.getVoiceStateForUser(userId)?.channelId as string | undefined);
 
     const channel = channelId == null ? undefined : ChannelStore.getChannel(channelId);
@@ -184,9 +183,9 @@ export const VoiceChannelIndicator = ErrorBoundary.wrap(({ userId, isActionButto
             {props => {
                 const iconProps: IconProps = {
                     ...props,
-                    className: classes(isActionButton ? ActionButtonClasses.actionButton : cl("speaker-padding"), isMessageIndicator && cl("message-indicator"), shouldHighlight && ActionButtonClasses.highlight),
-                    size: isActionButton ? 20 : undefined,
-                    onClick
+                    onClick,
+                    size,
+                    className: isActionButton ? cl("indicator-action-button") : cl("speaker-padding")
                 };
 
                 return isLocked ?
