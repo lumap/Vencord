@@ -16,18 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { VENCORD_USER_AGENT } from "@shared/vencordUserAgent";
 import { getCurrentChannel } from "@utils/discord";
 import { useAwaiter } from "@utils/react";
 import { findStoreLazy } from "@webpack";
-import { UserProfileStore } from "@webpack/common";
+import { UserProfileStore, UserStore } from "@webpack/common";
 
 import { settings } from "./settings";
 import { PronounMapping, Pronouns, PronounsCache, PronounSets, PronounsFormat, PronounSource, PronounsResponse } from "./types";
 
 const UserSettingsAccountStore = findStoreLazy("UserSettingsAccountStore");
 
-const EmptyPronouns = { pronouns: "", source: "", hasPendingPronouns: false } as const satisfies Pronouns;
+const EmptyPronouns = { pronouns: undefined, source: "", hasPendingPronouns: false } as const satisfies Pronouns;
 
 type RequestCallback = (pronounSets?: PronounSets) => void;
 
@@ -60,7 +59,7 @@ async function processQueue() {
     isProcessing = false;
 }
 
-function fetchPronouns(id: string): Promise<string> {
+function fetchPronouns(id: string): Promise<string | undefined> {
     return new Promise(resolve => {
         if (pronounCache[id] != null) {
             resolve(extractPronouns(pronounCache[id].sets));
@@ -92,7 +91,7 @@ async function bulkFetchPronouns(ids: string[]): Promise<PronounsResponse> {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "X-PronounDB-Source": VENCORD_USER_AGENT
+                "X-PronounDB-Source": "WebExtension/0.14.5"
             }
         });
 
@@ -111,8 +110,8 @@ async function bulkFetchPronouns(ids: string[]): Promise<PronounsResponse> {
     }
 }
 
-function extractPronouns(pronounSets?: PronounSets): string {
-    if (pronounSets == null) return "";
+function extractPronouns(pronounSets?: PronounSets): string | undefined {
+    if (pronounSets == null) return undefined;
     if (pronounSets.en == null) return PronounMapping.unspecified;
 
     const pronouns = pronounSets.en;
@@ -138,7 +137,7 @@ function getDiscordPronouns(id: string, useGlobalProfile: boolean = false): stri
     const globalPronouns = UserProfileStore.getUserProfile(id)?.pronouns;
     if (useGlobalProfile) return globalPronouns;
 
-    return UserProfileStore.getGuildMemberProfile(id, getCurrentChannel()?.guild_id)?.pronouns ?? globalPronouns;
+    return UserProfileStore.getGuildMemberProfile(id, getCurrentChannel()?.guild_id)?.pronouns || globalPronouns;
 }
 
 export function useFormattedPronouns(id: string, useGlobalProfile: boolean = false): Pronouns {
@@ -159,10 +158,15 @@ export function useFormattedPronouns(id: string, useGlobalProfile: boolean = fal
 }
 
 export function useProfilePronouns(id: string, useGlobalProfile: boolean = false): Pronouns {
-    const pronouns = useFormattedPronouns(id, useGlobalProfile);
+    try {
+        const pronouns = useFormattedPronouns(id, useGlobalProfile);
 
-    if (!settings.store.showInProfile) return EmptyPronouns;
-    if (!settings.store.showSelf && id === UserProfileStore.getCurrentUser()?.id) return EmptyPronouns;
+        if (!settings.store.showInProfile) return EmptyPronouns;
+        if (!settings.store.showSelf && id === UserStore.getCurrentUser()?.id) return EmptyPronouns;
 
-    return pronouns;
+        return pronouns;
+    } catch (e) {
+        console.error(e);
+        return EmptyPronouns;
+    }
 }
