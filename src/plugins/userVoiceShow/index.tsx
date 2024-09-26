@@ -99,7 +99,7 @@ export default definePlugin({
             addDecorator("UserVoiceShow", ({ user }) => user == null ? null : <VoiceChannelIndicator userId={user.id} />);
         }
         if (settings.store.showInMessages) {
-            addDecoration("UserVoiceShow", ({ message }) => message?.author == null ? null : <VoiceChannelIndicator userId={message.author.id} isMessageIndicator />);
+            addDecoration("UserVoiceShow", ({ message }) => message?.author == null ? null : <VoiceChannelIndicator userId={message.author.id} />);
         }
     },
 

@@ -26,6 +26,8 @@ import { i18nMessages } from "./i18nMessages";
 export { FluxEvents };
 
 export interface FluxDispatcher {
+    _interceptors: any;
+    addInterceptor(interceptor: (e: any) => void): unknown;
     _actionHandlers: any;
     _subscriptions: any;
     dispatch(event: { [key: string]: unknown; type: FluxEvents; }): Promise<void>;
