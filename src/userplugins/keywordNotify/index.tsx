@@ -332,7 +332,7 @@ const settings = definePluginSettings({
     },
     replies: {
         type: OptionType.BOOLEAN,
-        description: "Notify on replies",
+        description: "Notify on all replies, even with mentions off",
         default: false
     }
 });
