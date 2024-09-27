@@ -450,10 +450,6 @@ export default definePlugin({
             }
         }
 
-        if (m.message_reference) {
-            console.log(m.message_reference);
-        }
-
         if (matches || (
             m.message_reference != null &&
             m.referenced_message != null &&
