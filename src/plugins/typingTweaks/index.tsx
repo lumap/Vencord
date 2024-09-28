@@ -49,7 +49,7 @@ export function buildSeveralUsers({ a, b, c, count }: { a: string, b: string, c:
         <strong key="1">{b}</strong>,
         ", ",
         <strong key="2">{c}</strong>,
-        ` and ${count} others are typing...`
+        ` and ${count} other(s) are typing...`
     ];
 }
 
