@@ -233,6 +233,11 @@ export default definePlugin({
             description: "Whether to ignore messages by yourself",
             default: false
         },
+        ignorePluralKit: {
+            type: OptionType.BOOLEAN,
+            description: "Whether to ignore messages sent by PluralKit",
+            default: false
+        },
         ignoreUsers: {
             type: OptionType.STRING,
             description: "Comma-separated list of user IDs to ignore",
@@ -284,11 +289,13 @@ export default definePlugin({
     },
 
     shouldIgnore(message: any, isEdit = false) {
-        const { ignoreBots, ignoreSelf, ignoreUsers, ignoreChannels, ignoreGuilds, logEdits, logDeletes } = Settings.plugins.MessageLogger;
+        const { ignoreBots, ignoreSelf, ignorePluralKit, ignoreUsers, ignoreChannels, ignoreGuilds, logEdits, logDeletes } = Settings.plugins.MessageLogger;
         const myId = UserStore.getCurrentUser().id;
+        const channelMessages = Vencord.Webpack.Common.MessageStore.getMessages(message.channel_id).toArray();
 
         return ignoreBots && message.author?.bot ||
             ignoreSelf && message.author?.id === myId ||
+            ignorePluralKit && channelMessages.splice(channelMessages.length - 5, channelMessages.length - 1).some(msg => msg.content === message.content && !!msg.webhookId) ||
             ignoreUsers.includes(message.author?.id) ||
             ignoreChannels.includes(message.channel_id) ||
             ignoreChannels.includes(ChannelStore.getChannel(message.channel_id)?.parent_id) ||
