@@ -42,12 +42,14 @@ const settings = definePluginSettings({
     }
 });
 
-export function buildSeveralUsers({ a, b, count }: { a: string, b: string, count: number; }) {
+export function buildSeveralUsers({ a, b, c, count }: { a: string, b: string, c: string, count: number; }) {
     return [
         <strong key="0">{a}</strong>,
         ", ",
         <strong key="1">{b}</strong>,
-        `, and ${count} others are typing...`
+        ", ",
+        <strong key="2">{c}</strong>,
+        ` and ${count} others are typing...`
     ];
 }
 
