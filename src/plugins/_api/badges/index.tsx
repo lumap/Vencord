@@ -133,7 +133,7 @@ export default definePlugin({
             position: BadgePosition.START,
             props: {
                 style: {
-                    borderRadius: "50%",
+                    borderRadius: "6px",
                     transform: "scale(0.9)" // The image is a bit too big compared to default badges
                 }
             },
