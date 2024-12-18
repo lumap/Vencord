@@ -211,7 +211,13 @@ function KeywordEntries() {
         update();
     }
 
-    const elements = keywordEntries.map((entry, i) => {
+    async function setIgnoreCase(index: number, value: boolean) {
+        keywordEntries[index].ignoreCase = value;
+        await DataStore.set(KEYWORD_ENTRIES_KEY, keywordEntries);
+        update();
+    }
+
+    const elements = keywordEntries.map((_, i) => {
         return (
             <>
                 <Collapsible title={`Keyword Entry ${i + 1}`}>
@@ -234,10 +240,7 @@ function KeywordEntries() {
                     </Flex>
                     <Switch
                         value={values[i].ignoreCase}
-                        onChange={() => {
-                            values[i].ignoreCase = !values[i].ignoreCase;
-                            update();
-                        }}
+                        onChange={v=> setIgnoreCase(i, v)}
                         style={{ marginTop: "0.5em", marginRight: "40px" }}
                     >
                         Ignore Case
