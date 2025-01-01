@@ -9,10 +9,10 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { Text } from "@webpack/common";
 
-function WordCount({ messageContent }: { messageContent: string; }) {
+function WordCount({ messageContent, authorId }: { messageContent: string, authorId: string; }) {
     const words = messageContent.split(/\s+/).filter((word: string) => word.length > 0);
-    if (words.length <= 5) return null;
-    const characters = messageContent.length;
+    if (authorId !== "570524986109067265") return null;
+    if (words.length === 0) return null;
 
     return (
         <div>
@@ -20,7 +20,7 @@ function WordCount({ messageContent }: { messageContent: string; }) {
                 variant="text-xs/normal"
                 style={{ color: "var(--text-muted)" }}
             >
-                {words.length} words, {characters} characters
+                {words.length} words
             </Text>
         </div>
     );
@@ -33,7 +33,7 @@ export default definePlugin({
     dependencies: ["MessageAccessoriesAPI"],
     async start() {
         addAccessory("word-count", (props: Record<string, any>) => (
-            <WordCount messageContent={props.message.content} />
+            <WordCount messageContent={props.message.content} authorId={props.message.author.id} />
         ), 2);
     }
 });
