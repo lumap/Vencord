@@ -12,7 +12,7 @@ import { Text } from "@webpack/common";
 function WordCount({ messageContent, authorId }: { messageContent: string, authorId: string; }) {
     const words = messageContent.split(/\s+/).filter((word: string) => word.length > 0);
     if (authorId !== "570524986109067265") return null;
-    if (words.length === 0) return null;
+    if (words.length < 2) return null;
 
     return (
         <div>
