@@ -70,16 +70,15 @@ const TypingUser = ErrorBoundary.wrap(function ({ user, guildId }: Props) {
                 display: "grid",
                 gridAutoFlow: "column",
                 gap: "4px",
+                alignItems: "center",
                 color: settings.store.showRoleColors ? GuildMemberStore.getMember(guildId, user.id)?.colorString : undefined,
                 cursor: "pointer"
             }}
         >
             {settings.store.showAvatars && (
-                <div style={{ marginTop: "4px" }}>
-                    <Avatar
-                        size="SIZE_16"
-                        src={user.getAvatarURL(guildId, 128)} />
-                </div>
+                <Avatar
+                    size="SIZE_16"
+                    src={user.getAvatarURL(guildId, 128)} />
             )}
             {GuildMemberStore.getNick(guildId!, user.id)
                 || (!guildId && RelationshipStore.getNickname(user.id))
