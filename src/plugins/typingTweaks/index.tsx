@@ -111,8 +111,8 @@ export default definePlugin({
                 },
                 {
                     // Adds the alternative formatting for several users typing
-                    match: /(,{a:(\i),b:(\i),c:\i}\):\i\.length>3&&\(\i=)\i\.\i\.string\(\i\.\i#{intl::SEVERAL_USERS_TYPING}\)(?<=(\i)\.length.+?)/,
-                    replace: (_, rest, a, b, users) => `${rest}$self.buildSeveralUsers({ a: ${a}, b: ${b}, count: ${users}.length - 3 })`,
+                    match: /(,{a:(\i),b:(\i),c:(\i)}\):\i\.length>3&&\(\i=)\i\.\i\.string\(\i\.\i#{intl::SEVERAL_USERS_TYPING}\)(?<=(\i)\.length.+?)/,
+                    replace: (_, rest, a, b, c, users) => `${rest}$self.buildSeveralUsers({ a: ${a}, b: ${b}, c: ${c}, count: ${users}.length - 3 })`,
                     predicate: () => settings.store.alternativeFormatting
                 }
             ]
