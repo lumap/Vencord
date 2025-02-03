@@ -31,10 +31,10 @@ export default definePlugin({
         // edit msg needs send msg perms
         const currChannel = ChannelStore.getChannel(SelectedChannelStore.getChannelId());
         if (currChannel.guild_id && !PermissionStore.can(PermissionsBits.SEND_MESSAGES, currChannel)) return null;
-        
+
         // make sure message can be edited (type is 0, has no voice message)
         if (msg.type !== 0 || msg.hasFlag(8192)) return null;
-        
+
         // max attachment limit
         if (UserStore.getCurrentUser().id !== msg.author.id || msg.attachments.length === 10) return null;
 
@@ -56,7 +56,7 @@ export default definePlugin({
 
         input.addEventListener("change", async () => {
             if (!input.files) return input.remove();
-            
+
             if ((10 - messageAttachments) < input.files.length) {
                 showToast(`You can only add ${10 - messageAttachments} more attachments to this message.`, 2);
                 return input.remove();
@@ -83,9 +83,9 @@ export default definePlugin({
                     method: "PUT",
                     body: file
                 });
-                
+
                 const msg = MessageStore.getMessage(channelId, messageId);
-                
+
                 await Common.RestAPI.patch({
                     url: `/channels/${channelId}/messages/${messageId}`,
                     body: {
@@ -100,7 +100,7 @@ export default definePlugin({
                     }
                 });
             }
-            
+
             for (let i = 0; i < input.files.length; i++) {
                 await uploadLoop(input.files[i]);
             }
