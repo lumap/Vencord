@@ -1,3 +1,9 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2025 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 import { definePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
@@ -9,7 +15,7 @@ const settings = definePluginSettings({
         description: "Play a sound on every reply of yours, even if @mention is off",
         default: false
     }
-})
+});
 
 export default definePlugin({
     name: "SameChannelMentionsNotifications",
@@ -32,4 +38,4 @@ export default definePlugin({
         if (settings.store.playSoundOnEveryReply && (msg.message?.referenced_message?.author?.id === UserStore.getCurrentUser().id)) return true;
         return msg.message?.mentions?.some((mention: any) => mention.id === UserStore.getCurrentUser().id);
     }
-})
+});
