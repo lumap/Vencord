@@ -70,10 +70,6 @@ const TypingUser = ErrorBoundary.wrap(function ({ user, guildId }: Props) {
                 openUserProfile(user.id);
             }}
             style={{
-                display: "grid",
-                gridAutoFlow: "column",
-                gap: "4px",
-                alignItems: "center",
                 color: settings.store.showRoleColors ? GuildMemberStore.getMember(guildId, user.id)?.colorString : undefined,
             }}
         >
