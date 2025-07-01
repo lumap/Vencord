@@ -91,7 +91,7 @@ function TypingIndicator({ channelId, guildId }: { channelId: string; guildId: s
         }
         default: {
             tooltipText = Settings.plugins.TypingTweaks.enabled
-                ? buildSeveralUsers({ a: getDisplayName(guildId, typingUsersArray[0]), b: getDisplayName(guildId, typingUsersArray[1]), c: getDisplayName(guildId, typingUsersArray[2]), count: typingUsersArray.length - 2 })
+                ? buildSeveralUsers({ a: UserStore.getUser(a), b: UserStore.getUser(b), c: UserStore.getUser(c), count: typingUsersArray.length - 2, guildId })
                 : getIntlMessage("SEVERAL_USERS_TYPING");
             break;
         }
