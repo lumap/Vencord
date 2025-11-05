@@ -290,20 +290,22 @@ export default definePlugin({
     },
 
     shouldIgnore(message: any, isEdit = false) {
-        const { ignoreBots, ignoreSelf, ignorePluralKit, ignoreUsers, ignoreChannels, ignoreGuilds, logEdits, logDeletes } = Settings.plugins.MessageLogger;
-        const myId = UserStore.getCurrentUser().id;
-        const channelMessages = Vencord.Webpack.Common.MessageStore.getMessages(message.channel_id).toArray();
+        try {
+            const { ignoreBots, ignoreSelf, ignoreUsers, ignoreChannels, ignoreGuilds, logEdits, logDeletes } = Settings.plugins.MessageLogger;
+            const myId = UserStore.getCurrentUser().id;
 
-        return ignoreBots && message.author?.bot ||
-            ignoreSelf && message.author?.id === myId ||
-            ignorePluralKit && channelMessages.splice(channelMessages.length - 5, channelMessages.length - 1).some(msg => msg.content === message.content && !!msg.webhookId) ||
-            ignoreUsers.includes(message.author?.id) ||
-            ignoreChannels.includes(message.channel_id) ||
-            ignoreChannels.includes(ChannelStore.getChannel(message.channel_id)?.parent_id) ||
-            (isEdit ? !logEdits : !logDeletes) ||
-            ignoreGuilds.includes(ChannelStore.getChannel(message.channel_id)?.guild_id) ||
-            // Ignore Venbot in the support channels
-            (message.author?.id === VENBOT_USER_ID && ChannelStore.getChannel(message.channel_id)?.parent_id === SUPPORT_CATEGORY_ID);
+            return ignoreBots && message.author?.bot ||
+                ignoreSelf && message.author?.id === myId ||
+                ignoreUsers.includes(message.author?.id) ||
+                ignoreChannels.includes(message.channel_id) ||
+                ignoreChannels.includes(ChannelStore.getChannel(message.channel_id)?.parent_id) ||
+                (isEdit ? !logEdits : !logDeletes) ||
+                ignoreGuilds.includes(ChannelStore.getChannel(message.channel_id)?.guild_id) ||
+                // Ignore Venbot in the support channels
+                (message.author?.id === VENBOT_USER_ID && ChannelStore.getChannel(message.channel_id)?.parent_id === SUPPORT_CATEGORY_ID);
+        } catch (e) {
+            return false;
+        }
     },
 
     EditMarker({ message, className, children, ...props }: any) {
